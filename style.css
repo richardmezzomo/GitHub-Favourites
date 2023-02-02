@@ -23,10 +23,17 @@ body * {
   color: var(--text-color);
 }
 
+#app {
+  padding: 2rem;
+  max-width: 500px;
+  margin: 0 auto;
+}
+
 header {
   display: flex;
   align-items: center;
   justify-content: space-between;
+
 
   margin: 2.5rem 0;
 }
@@ -51,14 +58,14 @@ header h1 {
 .search button {
   background-color: var(--primary-color);
   border-radius: 0 .4rem .4rem 0;
-  border: none;
   height: 3.2rem;
+  border: none;
   padding: 0 1rem;
+  cursor: pointer;
 }
 
 .search button:hover {
   filter: brightness(1.1);
-  cursor: pointer;
 }
 
 .sr-only {
@@ -71,12 +78,6 @@ header h1 {
   clip: rect(0, 0, 0, 0);
   white-space: nowrap;
   border-width: 0;
-}
-
-#app {
-  padding: 2rem;
-  max-width: 500px;
-  margin: 0 auto;
 }
 
 table {
