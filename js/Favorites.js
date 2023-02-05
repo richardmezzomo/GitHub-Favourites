@@ -10,22 +10,15 @@ export class Favorites {
   }
 
   load() {
-    const entries = [
-      {
-        login: 'richardbmezzomo',
-        name: 'Richard B Mezzomo',
-        public_repos: '14',
-        followers: '42'
-      },
-      {
-        login: 'diego3g',
-        name: 'Diego Fernandes',
-        public_repos: '14',
-        followers: '42'
-      }  
-    ]
+    const entries = JSON.parse(localStorage.getItem('@github-favorites:')) || []
+  }
 
-    this.entries = entries
+  delete(user) {
+    // Higher-order functions (map, filter, find, reduce)
+    const filteredEntries = this.entries.filter(entry => entry.login !== user.login)
+
+    this.entries = filteredEntries
+    this.update()
   }
 }
 
@@ -49,6 +42,13 @@ export class FavoritesView extends Favorites {
       row.querySelector('.user span').textContent = user.login
       row.querySelector('.repositories').textContent = user.public_repos
       row.querySelector('.followers').textContent = user.followers
+      row.querySelector('.remove').onclick = () => {
+        const isOk = confirm('Are you sure you want to delete this row?')
+
+        if(isOk) {
+          this.delete(user)
+        }
+      }
 
 
       this.tbody.append(row)
