@@ -4,7 +4,7 @@ export class Favorites {
   constructor(root) {
     this.root = document.querySelector(root)
 
-    const tbody = this.root.querySelector('table tbody')
+    this.tbody = this.root.querySelector('table tbody')
     
     this.load()
   }
@@ -40,10 +40,18 @@ export class FavoritesView extends Favorites {
   update() {
     this.removeAllTr()
 
-    this.entries.forEach(users => {
+    this.entries.forEach(user => {
       const row = this.createRow()
 
       row.querySelector('.user img').src = `https://github.com/${user.login}.png`
+      row.querySelector('.user img').alt = `Image of ${user.name}`
+      row.querySelector('.user p').textContent = user.name
+      row.querySelector('.user span').textContent = user.login
+      row.querySelector('.repositories').textContent = user.public_repos
+      row.querySelector('.followers').textContent = user.followers
+
+
+      this.tbody.append(row)
     })
   }
 
@@ -71,7 +79,7 @@ export class FavoritesView extends Favorites {
 
   removeAllTr() {
   
-    tbody.querySelectorAll('tr')
+    this.tbody.querySelectorAll('tr')
       .forEach(() => {
         tr.remove()
       })
