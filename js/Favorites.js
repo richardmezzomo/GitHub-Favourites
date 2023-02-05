@@ -3,6 +3,29 @@
 export class Favorites {
   constructor(root) {
     this.root = document.querySelector(root)
+
+    const tbody = this.root.querySelector('table tbody')
+    
+    this.load()
+  }
+
+  load() {
+    const entries = [
+      {
+        login: 'richardbmezzomo',
+        name: 'Richard B Mezzomo',
+        public_repos: '14',
+        followers: '42'
+      },
+      {
+        login: 'diego3g',
+        name: 'Diego Fernandes',
+        public_repos: '14',
+        followers: '42'
+      }  
+    ]
+
+    this.entries = entries
   }
 }
 
@@ -10,15 +33,44 @@ export class Favorites {
 export class FavoritesView extends Favorites {
   constructor(root) {
     super(root)
+
+    this.update()
   }
 
   update() {
     this.removeAllTr()
+
+    this.entries.forEach(users => {
+      const row = this.createRow()
+
+      row.querySelector('.user img').src = `https://github.com/${user.login}.png`
+    })
+  }
+
+  createRow() {
+    const tr = document.createElement('tr')
+
+    tr.innerHTML = `
+  <tr>
+    <td class="user">
+      <img src="https://github.com/richardbmezzomo.png" alt="">
+      <a href="https://github.com/richardbmezzomo">
+        <p>Richard B Mezzomo</p>
+        <span>richardbmezzomo</span>
+      </a>
+    </td>
+    <td class="repositories">66</td>
+    <td class="followers">666</td>
+    <td>
+      <button class="remove">&times;</button>
+    </td>
+  </tr>
+  `
+  return tr
   }
 
   removeAllTr() {
-    const tbody = this.root.querySelector('table tbody')
-
+  
     tbody.querySelectorAll('tr')
       .forEach(() => {
         tr.remove()
