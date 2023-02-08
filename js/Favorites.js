@@ -1,31 +1,36 @@
+export class GitHubUser {
+  static search(username) {
+    const endpoint = `https://api.github.com/users/${username}`
+
+    return fetch(endpoint)
+    .then(data => data.json())
+    .then(({login, name, public_repos, followers}) => ({
+      login,
+      name,
+      public_repos,
+      followers
+    }))
+  }
+}
+
 // class that will contain the data logic
 // how data will be structured
 export class Favorites {
   constructor(root) {
     this.root = document.querySelector(root)
-
-    const tbody = this.root.querySelector('table tbody')
-    
     this.load()
   }
 
   load() {
-    const entries = [
-      {
-        login: 'richardbmezzomo',
-        name: 'Richard B Mezzomo',
-        public_repos: '14',
-        followers: '42'
-      },
-      {
-        login: 'diego3g',
-        name: 'Diego Fernandes',
-        public_repos: '14',
-        followers: '42'
-      }  
-    ]
+    this.entries = JSON.parse(localStorage.getItem('@github-favorites:')) || []
+  }
 
-    this.entries = entries
+  delete(user) {
+    // Higher-order functions (map, filter, find, reduce)
+    const filteredEntries = this.entries.filter(entry => entry.login !== user.login)
+
+    this.entries = filteredEntries
+    this.update()
   }
 }
 
@@ -33,6 +38,8 @@ export class Favorites {
 export class FavoritesView extends Favorites {
   constructor(root) {
     super(root)
+
+    this.tbody = this.root.querySelector('table tbody')
 
     this.update()
     this.onadd()
@@ -50,10 +57,25 @@ export class FavoritesView extends Favorites {
   update() {
     this.removeAllTr()
 
-    this.entries.forEach(users => {
+    this.entries.forEach(user => {
       const row = this.createRow()
 
       row.querySelector('.user img').src = `https://github.com/${user.login}.png`
+      row.querySelector('.user img').alt = `Image of ${user.name}`
+      row.querySelector('.user p').textContent = user.name
+      row.querySelector('.user span').textContent = user.login
+      row.querySelector('.repositories').textContent = user.public_repos
+      row.querySelector('.followers').textContent = user.followers
+
+      row.querySelector('.remove').onclick = () => {
+        const isOk = confirm('Are you sure you want to delete this row?')
+
+        if(isOk) {
+          this.delete(user)
+        }
+      }
+
+      this.tbody.append(row)
     })
   }
 
@@ -80,8 +102,7 @@ export class FavoritesView extends Favorites {
   }
 
   removeAllTr() {
-  
-    tbody.querySelectorAll('tr')
+    this.tbody.querySelectorAll('tr')
       .forEach(() => {
         tr.remove()
       })
