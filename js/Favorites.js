@@ -25,6 +25,12 @@ export class Favorites {
     this.entries = JSON.parse(localStorage.getItem('@github-favorites:')) || []
   }
 
+  async add(username) {
+    const user = await GitHubUser.search(username)
+
+    console.log(user)
+  }
+
   delete(user) {
     // Higher-order functions (map, filter, find, reduce)
     const filteredEntries = this.entries.filter(entry => entry.login !== user.login)
@@ -50,7 +56,7 @@ export class FavoritesView extends Favorites {
     addButton.onclick = () => {
       const {value} = this.root.querySelector('.search input')
 
-      this.add()
+      this.add(value)
     }
   }
 
