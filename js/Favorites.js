@@ -26,9 +26,19 @@ export class Favorites {
   }
 
   async add(username) {
-    const user = await GitHubUser.search(username)
+    try {
+      const user = await GitHubUser.search(username)
+      if(user.login === undefined) {
+        throw new Error('User not found!')
+      }
 
-    console.log(user)
+      this.entries = [user, ...this.entries]
+      this.update()
+
+    } catch(error) {
+      alert(error.message)
+    }
+
   }
 
   delete(user) {
