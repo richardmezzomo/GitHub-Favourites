@@ -1,4 +1,4 @@
-export class GitHubUser {
+export class GithubUser {
   static search(username) {
     const endpoint = `https://api.github.com/users/${username}`
 
@@ -25,15 +25,21 @@ export class Favorites {
     this.entries = JSON.parse(localStorage.getItem('@github-favorites:')) || []
   }
 
+  save() {
+    localStorage.setItem('@github-favorites:', JSON.stringify(this.entries))
+  }
+
   async add(username) {
     try {
-      const user = await GitHubUser.search(username)
+      const user = await GithubUser.search(username)
+
       if(user.login === undefined) {
         throw new Error('User not found!')
       }
 
       this.entries = [user, ...this.entries]
       this.update()
+      this.save()
 
     } catch(error) {
       alert(error.message)
@@ -47,6 +53,7 @@ export class Favorites {
 
     this.entries = filteredEntries
     this.update()
+    this.save()
   }
 }
 
@@ -62,7 +69,7 @@ export class FavoritesView extends Favorites {
   }
 
   onadd() {
-    const addButton = this.root.querySelector('.btnAdd')
+    const addButton = this.root.querySelector('.search button')
     addButton.onclick = () => {
       const {value} = this.root.querySelector('.search input')
 
@@ -99,7 +106,6 @@ export class FavoritesView extends Favorites {
     const tr = document.createElement('tr')
 
     tr.innerHTML = `
-  <tr>
     <td class="user">
       <img src="https://github.com/richardbmezzomo.png" alt="">
       <a href="https://github.com/richardbmezzomo">
@@ -112,7 +118,6 @@ export class FavoritesView extends Favorites {
     <td>
       <button class="remove">&times;</button>
     </td>
-  </tr>
   `
   return tr
   }
